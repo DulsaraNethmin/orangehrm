@@ -1,0 +1,22 @@
+apiv2_claim_events:
+  path: /api/v2/claim/events
+  controller: OrangeHRM\Core\Controller\Rest\V2\GenericRestController::handle
+  methods: [ POST, GET, DELETE ]
+  defaults:
+    _api: OrangeHRM\Claim\Api\ClaimEventAPI
+
+apiv2_claim_event:
+  path: /api/v2/claim/events/{id}
+  controller: OrangeHRM\Core\Controller\Rest\V2\GenericRestController::handle
+  methods: [ GET, PUT]
+  defaults:
+    _api: OrangeHRM\Claim\Api\ClaimEventAPI
+
+##########################
+#        Screens
+##########################
+
+claim_events:
+  path: /claim/events
+  controller: OrangeHRM\Claim\Controller\ClaimController::handle
+  methods: [ GET ]
