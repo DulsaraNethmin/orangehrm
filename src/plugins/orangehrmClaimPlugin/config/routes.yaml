@@ -11,3 +11,12 @@ apiv2_claim_event:
   methods: [ GET, PUT]
   defaults:
     _api: OrangeHRM\Claim\Api\ClaimEventAPI
+
+##########################
+#        Screens
+##########################
+
+claim_events:
+  path: /claim/events
+  controller: OrangeHRM\Claim\Controller\ClaimController::handle
+  methods: [ GET ]
