@@ -102,6 +102,9 @@ const defaultSortOrder = {
 };
 
 export default {
+  components: {
+    'delete-confirmation': DeleteConfirmationDialog,
+  },
   setup() {
     const filters = ref({...defaultFilters});
 
@@ -149,32 +152,37 @@ export default {
       sortDefinition,
     };
   },
-
-  data: () => ({
-    headers: [
-      {
-        name: 'name',
-        title: 'Name',
-        slot: 'title',
-        sortField: 'claimEvent.name',
-        style: {flex: 3},
-      },
-      {
-        name: 'status',
-        title: 'Status',
-        sortField: 'claimEvent.status',
-        style: {flex: 2},
-      },
-      {
-        name: 'actions',
-        title: 'Actions',
-        slot: 'action',
-        style: {flex: 1},
-        cellType: 'oxd-table-cell-actions',
-        cellConfig: {
-          delete: {
-            onClick: () => {
-              return;
+  data() {
+    return {
+      headers: [
+        {
+          name: 'name',
+          title: this.$t('general.name'),
+          slot: 'title',
+          sortField: 'claimEvent.name',
+          style: {flex: 3},
+        },
+        {
+          name: 'status',
+          title: 'Status',
+          sortField: this.$t('general.status'),
+          style: {flex: 2},
+        },
+        {
+          name: 'actions',
+          title: this.$t('general.actions'),
+          slot: 'action',
+          style: {flex: 1},
+          cellType: 'oxd-table-cell-actions',
+          cellConfig: {
+            delete: {
+              onClick: () => {
+                this.onClickDelete();
+              },
+              component: 'oxd-icon-button',
+              props: {
+                name: 'trash',
+              },
             },
             component: 'oxd-icon-button',
             props: {
@@ -211,6 +219,16 @@ export default {
       this.filter2 = null;
       this.filters = {...defaultFilters};
       this.filterItems();
+    },
+    onClickAdd() {
+      navigate('/claim/events/save');
+    },
+    onClickDelete() {
+      this.$refs.deleteDialog.showDialog().then((confirmation) => {
+        if (confirmation === 'ok') {
+          //this.deleteItems([item.id]);
+        }
+      });
     },
   },
 };
