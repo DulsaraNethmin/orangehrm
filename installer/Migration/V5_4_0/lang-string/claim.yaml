@@ -1,0 +1,8 @@
+langStrings:
+  -
+    value: 'Claim'
+    unitId: claim
+  -
+    value: 'Events'
+    unitId: events
+    
