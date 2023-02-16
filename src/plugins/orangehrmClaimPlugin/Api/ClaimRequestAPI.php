@@ -227,6 +227,22 @@ class ClaimRequestAPI extends Endpoint implements CrudEndpoint
     /**
      * @inheritDoc
      */
+    public function getOne(): EndpointResult
+    {
+        throw $this->getNotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getValidationRuleForGetOne(): ParamRuleCollection
+    {
+        throw $this->getNotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function delete(): EndpointResult
     {
         throw $this->getNotImplementedException();
