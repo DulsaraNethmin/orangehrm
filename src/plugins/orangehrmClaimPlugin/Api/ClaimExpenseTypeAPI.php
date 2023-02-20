@@ -89,7 +89,7 @@ class ClaimExpenseTypeAPI extends Endpoint implements CrudEndpoint
      *             @OA\Property(
      *                 property="data",
      *                 type="array",
-     *                 @OA\Items(ref="#/components/schemas/Claim-ClaimExpenseTypeModel")
+     *                 ref="#/components/schemas/Claim-ClaimExpenseTypeModel"
      *             ),
      *             @OA\Property(property="meta",
      *                 type="object",
