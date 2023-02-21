@@ -1,4 +1,5 @@
 <?php
+
 /**
  * OrangeHRM is a comprehensive Human Resource Management (HRM) System that captures
  * all the essential functionalities required for any enterprise.
@@ -23,6 +24,7 @@ use OrangeHRM\Claim\Dto\ClaimEventSearchFilterParams;
 use OrangeHRM\Claim\Dto\ClaimExpenseSearchFilterParams;
 use OrangeHRM\Claim\Dto\ClaimExpenseTypeSearchFilterParams;
 use OrangeHRM\Core\Dao\BaseDao;
+use OrangeHRM\Entity\ClaimAttachment;
 use OrangeHRM\Entity\ClaimEvent;
 use OrangeHRM\Entity\ClaimExpense;
 use OrangeHRM\Entity\ClaimRequest;
@@ -288,5 +290,25 @@ class ClaimDao extends BaseDao
             ->setParameter('ids', $ids)
             ->setParameter('isDeleted', true);
         return $q->getQuery()->execute();
+    }
+
+    /**
+     * @param ClaimAttachment $claimAttachment
+     * @return ClaimAttachment
+     */
+    public function saveClaimAttachment(ClaimAttachment $claimAttachment): ClaimAttachment
+    {
+        $this->persist($claimAttachment);
+        return $claimAttachment;
+    }
+
+    public function getNextAttachmentId(): int
+    {
+        $q = $this->createQueryBuilder(ClaimAttachment::class, 'attachment')
+            ->select('MAX(attachment.eattachId)');
+        $id = $q->getQuery()->execute();
+        $id[0][1]++;
+
+        return $id[0][1];
     }
 }

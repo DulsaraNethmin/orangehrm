@@ -21,10 +21,11 @@ namespace OrangeHRM\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use OrangeHRM\Entity\Decorator\ClaimAttachmentDecorator;
 use OrangeHRM\Entity\Decorator\DecoratorTrait;
 
 /**
- *
+ * @method ClaimAttachmentDecorator getDecorator()
  * @ORM\Table(name="ohrm_claim_attachment")
  * @ORM\Entity
  */
@@ -42,13 +43,14 @@ class ClaimAttachment
     /**
      * @var int
      * @ORM\Id
-     * @ORM\Column(name="eattach_id", type="longint")
+     * @ORM\Column(name="eattach_id", type="integer",options={"default" : 0})
+     * @ORM\GeneratedValue(strategy="NONE")
      */
-    private int $eattachId;
+    private int $eattachId = 0;
 
     /**
      * @var int
-     * @ORM\Column(name="eattach_size", type="int")
+     * @ORM\Column(name="eattach_size", type="integer")
      */
     private int $eattachSize;
 
@@ -66,12 +68,12 @@ class ClaimAttachment
 
     /**
      * @var string
-     * @ORM\Column(name="eattach_attachment", type="longblob")
+     * @ORM\Column(name="eattach_attachment", type="blob")
      */
     private $eattachAttachment;
 
     /**
-     * @var string
+     * @var string|resource
      * @ORM\Column(name="eattach_type", type="string")
      */
     private string $eattachType;
@@ -91,9 +93,9 @@ class ClaimAttachment
 
     /**
      * @var DateTime
-     * @ORM\Column(name="attached_by_time", type="datetime")
+     * @ORM\Column(name="attached_time", type="datetime")
      */
-    private DateTime $attachedByTime;
+    private DateTime $attachedTime;
 
     /**
      * @return int
@@ -242,16 +244,16 @@ class ClaimAttachment
     /**
      * @return DateTime
      */
-    public function getAttachedByTime(): DateTime
+    public function getAttachedTime(): DateTime
     {
-        return $this->attachedByTime;
+        return $this->attachedTime;
     }
 
     /**
-     * @param DateTime $attachedByTime
+     * @param DateTime $attachedTime
      */
-    public function setAttachedByTime(DateTime $attachedByTime): void
+    public function setAttachedTime(DateTime $attachedTime): void
     {
-        $this->attachedByTime = $attachedByTime;
+        $this->attachedTime = $attachedTime;
     }
 }

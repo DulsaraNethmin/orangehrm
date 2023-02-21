@@ -60,4 +60,8 @@ class ValidationDecorator
         $paramRule->setCompositeClass(Rules::ONE_OF);
         return $paramRule;
     }
+
+    public function requiredParam(string $PARAMETER_REQUEST_ID)
+    {
+    }
 }

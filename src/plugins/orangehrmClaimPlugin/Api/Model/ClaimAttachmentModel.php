@@ -15,46 +15,45 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA
+ *
  */
 
-namespace OrangeHRM\Entity\Decorator;
+namespace OrangeHRM\Claim\Api\Model;
 
-use OrangeHRM\Core\Traits\ORM\EntityManagerHelperTrait;
+use OrangeHRM\Core\Api\V2\Serializer\ModelTrait;
+use OrangeHRM\Core\Api\V2\Serializer\Normalizable;
 use OrangeHRM\Entity\ClaimAttachment;
-use OrangeHRM\Entity\User;
 
-class ClaimAttachmentDecorator
+class ClaimAttachmentModel implements Normalizable
 {
-    use EntityManagerHelperTrait;
+    use ModelTrait;
 
-    /**
-     * @var ClaimAttachment
-     */
-    protected ClaimAttachment $claimAttachment;
-
-    /**
-     * @param ClaimAttachment $claimAttachment
-     */
     public function __construct(ClaimAttachment $claimAttachment)
     {
-        $this->claimAttachment = $claimAttachment;
-    }
-
-    /**
-     * @return ClaimAttachment
-     */
-    public function getClaimAttachment(): ClaimAttachment
-    {
-        return $this->claimAttachment;
-    }
-
-    /**
-     * @param int $userId
-     */
-    public function setUserByUserId(int $userId): void
-    {
-        $user = $this->getReference(User::class, $userId);
-        $this->getClaimAttachment()->setUser($user);
-        $this->claimAttachment->setAttachedByName($user->getEmployee()->getFirstName());
+        $this->setEntity($claimAttachment);
+        $this->setFilters(
+            [
+                'requestId',
+                'eattachId',
+                'eattachFileName',
+                'eattachType',
+                'eattachSize',
+                'eattachDESC',
+                'attachedByName',
+                'attachedTime',
+            ]
+        );
+        $this->setAttributeNames(
+            [
+                'requestId',
+                'attachmentId',
+                'fileName',
+                'fileType',
+                'fileSize',
+                'fileDescription',
+                'attachedBy',
+                'attachedTime',
+            ]
+        );
     }
 }
