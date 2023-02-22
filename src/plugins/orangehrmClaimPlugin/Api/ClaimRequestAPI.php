@@ -1,4 +1,5 @@
 <?php
+
 /**
  * OrangeHRM is a comprehensive Human Resource Management (HRM) System that captures
  * all the essential functionalities required for any enterprise.
@@ -154,7 +155,7 @@ class ClaimRequestAPI extends Endpoint implements CrudEndpoint
 
             $this->commitTransaction();
             return $this->getClaimService()->getClaimDao()->saveClaimRequest($claimRequest);
-        } catch (InvalidParamException|BadRequestException $e) {
+        } catch (InvalidParamException | BadRequestException $e) {
             $this->rollBackTransaction();
             throw $e;
         } catch (Exception $e) {
@@ -229,15 +230,23 @@ class ClaimRequestAPI extends Endpoint implements CrudEndpoint
      */
     public function getOne(): EndpointResult
     {
-        throw $this->getNotImplementedException();
+        $id = $this->getRequestParams()->getInt(RequestParams::PARAM_TYPE_ATTRIBUTE, CommonParams::PARAMETER_ID);
+        $claimRequest = $this->getClaimService()->getClaimDao()->getClaimRequestById($id);
+        $this->throwRecordNotFoundExceptionIfNotExist($claimRequest, ClaimRequest::class);
+        return new EndpointResourceResult(ClaimRequestModel::class, $claimRequest);
     }
 
     /**
-     * @inheritDoc
+     * @return ParamRuleCollection
      */
     public function getValidationRuleForGetOne(): ParamRuleCollection
     {
-        throw $this->getNotImplementedException();
+        return new ParamRuleCollection(
+            new ParamRule(
+                CommonParams::PARAMETER_ID,
+                new Rule(Rules::POSITIVE)
+            ),
+        );
     }
 
     /**

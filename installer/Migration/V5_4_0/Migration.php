@@ -169,58 +169,6 @@ class Migration extends AbstractMigration
             $this->getSchemaHelper()->addForeignKey('ohrm_claim_request', $foreignKeyConstraint3);
         }
 
-        $this->getSchemaHelper()->createTable('ohrm_enforce_password')
-            ->addColumn('id', Types::INTEGER, ['Autoincrement' => true])
-            ->addColumn('user_id', Types::INTEGER, ['Notnull' => true])
-            ->addColumn('enforce_request_date', Types::DATETIME_MUTABLE, ['Notnull' => false])
-            ->addColumn('reset_code', Types::STRING, ['Notnull' => true])
-            ->addColumn('expired', Types::BOOLEAN, ['Notnull' => true, 'Default' => 0])
-            ->setPrimaryKey(['id'])
-            ->create();
-
-        $resetCode = new Index(
-            'reset_code',
-            ['reset_code']
-        );
-        $this->getSchemaManager()->createIndex($resetCode, 'ohrm_enforce_password');
-
-        $foreignKeyConstraint = new ForeignKeyConstraint(
-            ['user_id'],
-            'ohrm_user',
-            ['id'],
-            'enforcePasswordUser',
-            ['onDelete' => 'NO ACTION']
-        );
-        $this->getSchemaHelper()->addForeignKey('ohrm_enforce_password', $foreignKeyConstraint);
-        if (!$this->getSchemaHelper()->tableExists(['ohrm_expense'])) {
-            $this->getSchemaHelper()->createTable('ohrm_expense')
-                ->addColumn('id', Types::INTEGER, ['Autoincrement' => true])
-                ->addColumn('expense_type_id', Types::INTEGER, ['Notnull' => false])
-                ->addColumn('date', Types::DATETIME_MUTABLE, ['Notnull' => false])
-                ->addColumn('amount', Types::DECIMAL, ['Notnull' => false, 'Scale' => 2, 'Precision' => 12])
-                ->addColumn('note', Types::STRING, ['Notnull' => false, 'Length' => 1000])
-                ->addColumn('request_id', Types::INTEGER, ['Notnull' => false])
-                ->addColumn('is_deleted', Types::BOOLEAN, ['Notnull' => true, 'Default' => 0])
-                ->setPrimaryKey(['id'])
-                ->create();
-            $foreignKeyConstraint1 = new ForeignKeyConstraint(
-                ['expense_type_id'],
-                'ohrm_expense_type',
-                ['id'],
-                'expenseTypeId',
-                ['onDelete' => 'CASCADE']
-            );
-            $this->getSchemaHelper()->addForeignKey('ohrm_expense', $foreignKeyConstraint1);
-            $foreignKeyConstraint2 = new ForeignKeyConstraint(
-                ['request_id'],
-                'ohrm_claim_request',
-                ['id'],
-                'claimRequsetId',
-                ['onDelete' => 'CASCADE']
-            );
-            $this->getSchemaHelper()->addForeignKey('ohrm_expense', $foreignKeyConstraint2);
-        }
-
         if (!$this->getSchemaHelper()->tableExists(['ohrm_claim_attachment'])) {
             $this->getSchemaHelper()->createTable('ohrm_claim_attachment')
                 ->addColumn('request_id', Types::INTEGER)
@@ -253,33 +201,29 @@ class Migration extends AbstractMigration
             $this->getSchemaHelper()->addForeignKey('ohrm_claim_attachment', $foreignKeyConstraint2);
         }
 
-        if (!$this->getSchemaHelper()->tableExists(['ohrm_claim_request_action_log'])) {
-            $this->getSchemaHelper()->createTable('ohrm_claim_request_action_log')
-                ->addColumn('id', Types::BIGINT, ['Autoincrement' => true])
-                ->addColumn('claim_request_id', Types::INTEGER, ['Notnull' => false])
-                ->addColumn('performed_by_id', Types::INTEGER, ['Notnull' => false])
-                ->addColumn('action', Types::STRING, ['Length' => 255])
-                ->addColumn('note', Types::STRING, ['Length' => 1000])
-                ->addColumn('date_time', Types::DATETIME_MUTABLE)
-                ->setPrimaryKey(['id'])
-                ->create();
-            $foreignKeyConstraint1 = new ForeignKeyConstraint(
-                ['claim_request_id'],
-                'ohrm_claim_request',
-                ['id'],
-                'claimRequestId2',
-                ['onDelete' => 'CASCADE']
-            );
-            $this->getSchemaHelper()->addForeignKey('ohrm_claim_request_action_log', $foreignKeyConstraint1);
-            $foreignKeyConstraint2 = new ForeignKeyConstraint(
-                ['performed_by_id'],
-                'hs_hr_employee',
-                ['emp_number'],
-                'performedById',
-                ['onDelete' => 'CASCADE']
-            );
-            $this->getSchemaHelper()->addForeignKey('ohrm_claim_request_action_log', $foreignKeyConstraint2);
-        }
+        $this->getSchemaHelper()->createTable('ohrm_enforce_password')
+            ->addColumn('id', Types::INTEGER, ['Autoincrement' => true])
+            ->addColumn('user_id', Types::INTEGER, ['Notnull' => true])
+            ->addColumn('enforce_request_date', Types::DATETIME_MUTABLE, ['Notnull' => false])
+            ->addColumn('reset_code', Types::STRING, ['Notnull' => true])
+            ->addColumn('expired', Types::BOOLEAN, ['Notnull' => true, 'Default' => 0])
+            ->setPrimaryKey(['id'])
+            ->create();
+
+        $resetCode = new Index(
+            'reset_code',
+            ['reset_code']
+        );
+        $this->getSchemaManager()->createIndex($resetCode, 'ohrm_enforce_password');
+
+        $foreignKeyConstraint = new ForeignKeyConstraint(
+            ['user_id'],
+            'ohrm_user',
+            ['id'],
+            'enforcePasswordUser',
+            ['onDelete' => 'NO ACTION']
+        );
+        $this->getSchemaHelper()->addForeignKey('ohrm_enforce_password', $foreignKeyConstraint);
 
         if (!$this->getSchemaHelper()->tableExists(['ohrm_expense'])) {
             $this->getSchemaHelper()->createTable('ohrm_expense')
