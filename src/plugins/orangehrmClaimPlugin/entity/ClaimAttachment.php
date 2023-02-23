@@ -91,9 +91,9 @@ class ClaimAttachment
 
     /**
      * @var DateTime
-     * @ORM\Column(name="attached_by_time", type="datetime")
+     * @ORM\Column(name="attached_time", type="datetime")
      */
-    private DateTime $attachedByTime;
+    private DateTime $attachedTime;
 
     /**
      * @return int
@@ -242,16 +242,16 @@ class ClaimAttachment
     /**
      * @return DateTime
      */
-    public function getAttachedByTime(): DateTime
+    public function getAttachedTime(): DateTime
     {
-        return $this->attachedByTime;
+        return $this->attachedTime;
     }
 
     /**
-     * @param DateTime $attachedByTime
+     * @param DateTime $attachedTime
      */
-    public function setAttachedByTime(DateTime $attachedByTime): void
+    public function setAttachedTime(DateTime $attachedTime): void
     {
-        $this->attachedByTime = $attachedByTime;
+        $this->attachedTime = $attachedTime;
     }
 }

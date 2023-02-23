@@ -29,6 +29,7 @@ use OrangeHRM\Core\Api\V2\Endpoint;
 use OrangeHRM\Core\Api\V2\EndpointCollectionResult;
 use OrangeHRM\Core\Api\V2\EndpointResourceResult;
 use OrangeHRM\Core\Api\V2\EndpointResult;
+use OrangeHRM\Core\Api\V2\Exception\InvalidParamException;
 use OrangeHRM\Core\Api\V2\RequestParams;
 use OrangeHRM\Core\Api\V2\Validator\ParamRule;
 use OrangeHRM\Core\Api\V2\Validator\ParamRuleCollection;
@@ -105,13 +106,15 @@ class ClaimAttachmentAPI extends Endpoint implements CrudEndpoint
     public function create(): EndpointResult
     {
         $claimAttachment = new ClaimAttachment();
-        $claimAttachment->setRequestId($this->getRequestParams()->getInt(RequestParams::PARAM_TYPE_BODY, self::PARAMETER_REQUEST_ID));
+        $requestId = $this->getRequestParams()->getInt(RequestParams::PARAM_TYPE_ATTRIBUTE, self::PARAMETER_CLAIM_REQUEST_ID);
+        if($this->getClaimService()->getClaimDao()->getClaimRequestById($requestId) == null)
+            throw new InvalidParamException();
+        $claimAttachment->setRequestId($requestId);
         $userId = $this->getAuthUser()->getUserId();
         $claimAttachment->getDecorator()->setUserByUserId($userId);
-        $claimAttachment->setEattachId($this->getClaimService()->getClaimDao()->getNextAttachmentId());
+        $claimAttachment->setEattachId($this->getClaimService()->getClaimDao()->getNextAttachmentId($requestId));
         $claimAttachment->setAttachedTime($this->getDateTimeHelper()->getNow());
         $this->setAttachment($claimAttachment);
-        $count = $this->getClaimService()->getClaimDao()->saveClaimAttachment($claimAttachment);
         return new EndpointResourceResult(ClaimAttachmentModel::class, $this->getPartialClaimAttachment($claimAttachment));
     }
 
@@ -139,11 +142,12 @@ class ClaimAttachmentAPI extends Endpoint implements CrudEndpoint
     public function getValidationRuleForCreate(): ParamRuleCollection
     {
         return new ParamRuleCollection(
-            new ParamRule(
-                self::PARAMETER_REQUEST_ID,
-                new Rule(Rules::POSITIVE)
+            $this->getValidationDecorator()->RequiredParamRule(
+                new ParamRule(
+                    self::PARAMETER_CLAIM_REQUEST_ID,
+                    new Rule(Rules::POSITIVE)
+                )
             ),
-
             new ParamRule(
                 self::PARAMETER_ATTACHMENT_CONTENT,
                 new Rule(Rules::BASE_64_ATTACHMENT, [self::ALLOWED_ATTACHMENT_FILE_TYPES])
